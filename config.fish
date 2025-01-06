@@ -18,9 +18,11 @@ else
     set -x NVM_DIR "$XDG_CONFIG_HOME/nvm"
 end
 
-# Load nvm if it exists
-if test -s "$NVM_DIR/nvm.sh"
-    source "$NVM_DIR/nvm.sh"
+# Load nvm only if it's not already loaded
+if not type -q nvm
+    if test -f ~/.nvm/nvm.sh
+        bass source ~/.nvm/nvm.sh ';' nvm use default
+    end
 end
 
-bind \cf 'find ~/Projects/ -maxdepth 3 -type d | fzf | read selected_dir; tmux-sessionizer $selected_dir'
+bind \cf 'find ~/Projects/ -maxdepth 3 -type d -not -path "*/.git*" -not -path "*/.vscode*" -not -path "*/.venv" | fzf | read selected_dir; tmux-sessionizer $selected_dir'
